@@ -1,13 +1,20 @@
 window.buildHTML = (function(){
 
-    function addChildElement(element, children) {
-        const [ , , ...elements] = [...children];
-        elements.forEach( el => element.append(el));
+    function addChildElement(element) {
+        return function (value) {
+            if (typeof value === 'object') {
+                element.append(value);
+            } else if (typeof value === 'function') {
+                element.append(value());
+            } else {
+                element.textContent = value;
+            }
+        }
     }
 
 
 
-    function createElement (elementOrTagName, attributes, valueOrchildren) {
+    function createElement (elementOrTagName, attributes, ...valueOrchildren) {
         let element;
         
         if(typeof tagName === 'function') {
@@ -25,13 +32,8 @@ window.buildHTML = (function(){
                 element.setAttribute(attribute, value);
             });
         }
-    
-        
-        if (typeof valueOrchildren === 'object') {
-            addChildElement(element, arguments)
-        } else {
-            element.textContent = valueOrchildren;
-        }
+
+        valueOrchildren.forEach(addChildElement(element));
     
         return element;
     
