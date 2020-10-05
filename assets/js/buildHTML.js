@@ -1,4 +1,12 @@
 window.buildHTML = (function(){
+
+    function addChildElement(element, children) {
+        const [ , , ...elements] = [...children];
+        elements.forEach( el => element.append(el));
+    }
+
+
+
     function createElement (elementOrTagName, attributes, valueOrchildren) {
         let element;
         
@@ -10,16 +18,17 @@ window.buildHTML = (function(){
             listOfAtributtes = Object.entries(attributes);
     
             listOfAtributtes.forEach(([attribute, value]) => {
+                if (typeof value === 'function') {
+                    element.addEventListener(attribute, value);
+                    return;
+                }
                 element.setAttribute(attribute, value);
             });
         }
     
-    
+        
         if (typeof valueOrchildren === 'object') {
-    
-            const [ , , ...elements] = [...arguments];
-            elements.forEach( el => element.append(el));
-    
+            addChildElement(element, arguments)
         } else {
             element.textContent = valueOrchildren;
         }
@@ -40,4 +49,4 @@ window.buildHTML = (function(){
     }
 
 
-})()
+})();
