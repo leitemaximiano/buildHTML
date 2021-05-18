@@ -1,54 +1,79 @@
 window.buildHTML = (function(){
 
-    function addChildElement(element) {
-        return function (value) {
-            if (typeof value === 'object') {
-                element.append(value);
-            } else if (typeof value === 'function') {
-                element.append(value());
-            } else {
-                element.textContent = value;
-            }
+    function _addAttribute(element) {
+        return function(name, value) {
+            name = name === 'HTMLfor' ? 'for': name;
+            name = name === 'className' ? 'class': name;
+            element.setAttribute(name, value);
         }
     }
 
+    function _addEventListiner(element) {
+        return function(eventName, fn) {
+            eventName = eventName.slice(2, eventName.length);
+            element.addEventListener(eventName, fn);
+        }
+    }
 
-
-    function createElement (elementOrTagName, attributes, ...valueOrchildren) {
-        let element;
+    function _buildElement(tagName, props) {
+        const element = document.createElement(tagName);
         
-        if(typeof tagName === 'function') {
-            element = elementOrTagName();
-        } else {
-            element = document.createElement(elementOrTagName);
-    
-            listOfAtributtes = Object.entries(attributes);
-    
-            listOfAtributtes.forEach(([attribute, value]) => {
-                if (typeof value === 'function') {
-                    element.addEventListener(attribute, value);
-                    return;
-                }
-                element.setAttribute(attribute, value);
-            });
+        const attributesAndEvents = Object.keys(props);
+        const eventsName = attributesAndEvents.filter(attributeName => attributeName.includes('on'));
+        const attributsName = attributesAndEvents.filter(attributeName => !attributeName.includes('on'));
+        
+        const addAttributes = _addAttribute(element);
+        const addEvents = _addEventListiner(element);
+
+        eventsName.forEach( nameEvent => {
+            addEvents(nameEvent, props[nameEvent]);
+        });
+
+        attributsName.forEach( attributeName => {
+            addAttributes(attributeName, props[attributeName])
+        });
+
+        return element;
+    }
+
+
+    function _makeHTML(element) {
+        if (Object.prototype.toString.call(element).includes("String")) {
+            return document.createTextNode(element);
         }
 
-        valueOrchildren.forEach(addChildElement(element));
-    
-        return element;
-    
+        const elementCurrent = _buildElement(element.tagName, element.props);
+        element.children.forEach( virtualChild => {
+            const child = typeof virtualChild === 'function' ? createElement(virtualChild): virtualChild;
+            elementCurrent.appendChild(_makeHTML(child));
+            
+        })
+
+        return elementCurrent;
     }
     
-    function renderHTML (selector, app) {
-        const element = app();
-        document.querySelector(selector)
-            .appendChild(element);
+    
+    function createElement(tagNameOrElement, props, ...children) {
+    
+        if(typeof tagNameOrElement === 'function') {
+            return tagNameOrElement({ props, children })
+        }
+        
+        return {
+            tagName: tagNameOrElement,
+            props,
+            children
+        }
     }
+
+    function render(initalElement, element) {
+        const elementsHTML = _makeHTML(element);
+        initalElement.append(elementsHTML)
+    }
+
 
     return {
         createElement,
-        renderHTML
+        render
     }
-
-
 })();

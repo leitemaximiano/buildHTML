@@ -1,105 +1,61 @@
-function Application () {
-
-    return (
-        buildHTML.createElement('div', { id: 'app'},
-            Header,
-            buildHTML.createElement('table', {}, 
-                buildHTML.createElement('thead', {}, 
-                    buildHTML.createElement('tr', {}, 
-                        buildHTML.createElement('th', {}, '#'),
-                        buildHTML.createElement('th', {}, 'nome'),
-                        buildHTML.createElement('th', {}, 'email'),
-                        buildHTML.createElement('th', {}, 'ações')
-                    )
-                ),
-                buildHTML.createElement('tr', {},
-                    buildHTML.createElement('td', {}, '1'),
-                    buildHTML.createElement('td', {}, 'mariana melo'),
-                    buildHTML.createElement('td', {}, 'maria@gmail.com'),
-                    buildHTML.createElement('td', {}, 
-                        buildHTML.createElement('a', { href: '#'}, 'edit'),
-                        buildHTML.createElement('a', { href: '#'}, 'excluir')
-                    ),
-                ),
-                buildHTML.createElement('tr', {},
-                    buildHTML.createElement('td', {}, '1'),
-                    buildHTML.createElement('td', {}, 'mariana melo'),
-                    buildHTML.createElement('td', {}, 'maria@gmail.com'),
-                    buildHTML.createElement('td', {}, 
-                        buildHTML.createElement('a', { href: '#'}, 'edit'),
-                        buildHTML.createElement('a', { href: '#'}, 'excluir')
-                    ),
-                )
-            ),
-            buildHTML.createElement('input', {value: 'maximiano'})
-        )
-    );
+function App() {
+    const style = `
+        width: 95%;
+        background-color: #F1F1F3;
+        margin-left: auto;
+        margin-right: auto;
+    `;
+    return buildHTML.createElement('div', {id: 'header', style}, Header);
 }
 
 function Header () {
-    return (
 
-        buildHTML.createElement('header',
-        {
-            class: 'header'
-        },
-            buildHTML.createElement('a',
-            {
-                class: 'logo',
-                href: '#'
-            },
-            'Logo'
-            ),
-            buildHTML.createElement('nav',
-            {
-                class: 'menu'
-            },
-                buildHTML.createElement('ul',
-                {
-                    class: 'menu__list'
-                },
-                    buildHTML.createElement('li',
-                    {
-                        class: 'menu__item'
-                    },
-                        buildHTML.createElement('a',
-                        {
-                            class: 'menu__item',
-                            href: '#'
-                        },
-                          'HOME'  
-                        )
-                    ),
-                    buildHTML.createElement('li',
-                    {
-                        class: 'menu__item'
-                    },
-                        buildHTML.createElement('a',
-                        {
-                            class: 'menu__item',
-                            href: '#'
-                        },
-                          'HOME'  
-                        )
-                    ),
-                    buildHTML.createElement('li',
-                    {
-                        class: 'menu__item'
-                    },
-                        buildHTML.createElement('a',
-                        {
-                            class: 'menu__item',
-                            href: '#'
-                        },
-                          'HOME'  
-                        )
-                    )
-                )
+    const headerStyle = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 65px;
+        background-color: #EFA;
+    `;
 
+    const menuStyle = ``;
+    const menuListStyle = `
+        display: flex;
+        list-style-type: none;
+    `;
+    const menuListItemStyle = `
+        
+    `;
+    const menuText = `
+        text-decoration: none;
+        font-size: 1.3rem;
+        padding: 5px 10px;
+        color: #080808;
+    `;
+
+    return buildHTML.createElement('header', { style: headerStyle},
+        buildHTML.createElement('div', {}, 
+            buildHTML.createElement('a', {href: '#'},
+                'My Logo'
+            )
+        ),
+        buildHTML.createElement('nav', { style: menuStyle }, 
+            buildHTML.createElement('ul', { style: menuListStyle }, 
+                buildHTML.createElement('li', { style: menuListItemStyle }, 
+                    buildHTML.createElement('a', {href: '#', style: menuText}, 'Item 1')
+                ),
+                buildHTML.createElement('li', { style: menuListItemStyle }, 
+                    buildHTML.createElement('a', {href: '#', style: menuText}, 'Item 2')
+                ),
+                buildHTML.createElement('li', { style: menuListItemStyle }, 
+                    buildHTML.createElement('a', {href: '#', style: menuText}, 'Item 3')
+                ),
+                buildHTML.createElement('li', { style: menuListItemStyle }, 
+                    buildHTML.createElement('a', {href: '#', style: menuText}, 'Item 4')
+                ),
             )
         )
     );
 }
 
-buildHTML.renderHTML('#app', Application);
-
+buildHTML.render(document.getElementById('app'), buildHTML.createElement(App));
